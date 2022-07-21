@@ -9,7 +9,7 @@ export const Content = styled.div `
   margin: 0 auto;
 
   //ANCHOR como o tamanho da fonte foi definida no style global, toda vez que usar o rem (1rem = 16px)
-  padding: 2rem 1rem 5rem; // 1rem de altura e 10rem de largura
+  padding: 2rem 1rem 10rem; // 1rem de altura e 10rem de largura
   display: flex;
   align-items: center; // alinha os itens ao centro
   justify-content: space-between; // da um espaçamento entre a logo e o botao
