@@ -1,14 +1,10 @@
-import { useEffect } from "react";
-import { api } from "../../services/api";
+import { useContext } from "react";
+import { TransactionsContext } from "../../TransactionsContext";
 import { Container } from "./style";
 
 export function TransactionTable() {
-  // o fetch esta puxando o local criado pelo MirageJS, deve ser sub. por uma API fornecida pelo backend
-  useEffect(() => {
-    //o api foi definido em services/api do axios
-    api.get('transactions')
-      .then(response => console.log(response.data))
-  }, []);
+  // importação dos dados da Context
+  const transactions = useContext(TransactionsContext);
 
   return (
     <Container>
@@ -25,20 +21,32 @@ export function TransactionTable() {
         </thead>
 
         {/* corpo da tabela */}
+        {/* Importação dos dados do BD para a listagem da tabela */}
         <tbody>
-          <tr>
-            <td>Desenvolvimento de WebSite</td>
-            <td className="deposit">R$ 12.000</td>
-            <td>Desenvolvimento</td>
-            <td>20/02/2021</td>
-          </tr>
+          {transactions.map(transaction => {
+            return (
+              <tr key={transaction.id}>
 
-          <tr>
-            <td>Aluguel</td>
-            <td className="withdraw">(R$ 1.000)</td>
-            <td>Casa</td>
-            <td>17/02/2021</td>
-          </tr>
+                <td>{transaction.title}</td>
+
+                <td className={transaction.type}>
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(transaction.amount)}
+                </td>
+
+                <td>{transaction.category}</td>
+
+                <td>
+                {new Intl.DateTimeFormat('pt-BR').format(
+                  new Date(transaction.createdAt)
+                )}
+                </td>
+
+              </tr>
+            )
+          })}
         </tbody>
 
       </table>

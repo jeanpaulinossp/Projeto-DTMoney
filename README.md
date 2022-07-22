@@ -30,4 +30,11 @@
 > React Modal
 >> yarn add react-modal
 >> yarn add @types/react-modal -D
->>> Criar o estado do modal no APP e exporta-lo para onde deve ser usado, que nesse caso é o Header
+>>> Criar o estado do modal no APP
+>>> Criar um component para puxar o Modal
+>>> Criar uma interface para desestrutura o modal no Header e no Modal
+
+## Importação de biblioteca para criação de funções no CSS Styled
+
+> Polished
+>> yarn add polished

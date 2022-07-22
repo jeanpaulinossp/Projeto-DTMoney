@@ -2,11 +2,8 @@ import { Dashboard } from "./components/Dashboard";
 import { Header } from "./components/Header";
 import { GlobalStyle } from "./styles/global"
 import { useState } from "react";
-// ANCHOR importando o modal
-import Modal from 'react-modal';
-
-// O modal deve ser definido como root para fim de acessibilidade
-Modal.setAppElement('#root');
+import { NewTransactionModal } from "./components/NewTransactionModal";
+import { TransactionsProvider } from "./TransactionsContext";
 
 export function App() {
 
@@ -24,22 +21,18 @@ function handleCloseNewTransactionModal() {
 }
 
   return (
-    <>
+    // o context foi criado no TransactionsContext (ele deve ser colocado em volta da aplicação toda)
+    // ele serve para transportar informações de uma parte do código para outra
+    <TransactionsProvider>
       <Header onOpenNewTransactionModal={handleOpenNewTransactionModal}/>
 
       <Dashboard />
 
-      {/* ANCHOR incluir o modal dentro da página 
-      isOpen => puxar a variavel que informa se o estado esta fechado ou aberto (Não puxar a função)
-      onRequestClose => importar a função de fechar (handleOpenNewTransactionModal)
-      */}
-      <Modal
-        isOpen={isNewTransactionModalOpen} 
-        onRequestClose={handleCloseNewTransactionModal}>
-        <h2>Cadastrar transação</h2>
-      </Modal>
+      <NewTransactionModal 
+        isOpen={isNewTransactionModalOpen}
+        onRequestClose={handleCloseNewTransactionModal} />
 
       <GlobalStyle />
-    </>
+    </TransactionsProvider>
   );
 }

@@ -1,10 +1,16 @@
+import { useContext } from "react"
 import { Container } from "./style"
 import entradaImg from '../../assets/entradas.svg'
 import saidaImg from '../../assets/saidas.svg'
 import totalImg from '../../assets/total.svg'
+import { TransactionsContext } from "../../TransactionsContext"
 
 
 export function Summary() {
+  //retornar o valor passado no Content
+  const transactions = useContext(TransactionsContext)
+
+  console.log(transactions)
   return (
     <Container>
       {/* 1° Caixa */}
