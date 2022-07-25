@@ -1,16 +1,31 @@
-import { useContext } from "react"
 import { Container } from "./style"
 import entradaImg from '../../assets/entradas.svg'
 import saidaImg from '../../assets/saidas.svg'
 import totalImg from '../../assets/total.svg'
-import { TransactionsContext } from "../../TransactionsContext"
+import { useTransactions } from "../../hooks/useTransactions"
 
 
 export function Summary() {
   //retornar o valor passado no Content
-  const transactions = useContext(TransactionsContext)
+  const { transactions } = useTransactions();
 
-  console.log(transactions)
+  const summary = transactions.reduce((acc, transaction) => {
+    if (transaction.type === 'deposit') {
+      acc.deposits += transaction.amount;
+      acc.total += transaction.amount
+    } else {
+      acc.withdraws += transaction.amount;
+      acc.total -= transaction.amount;
+    }
+
+    return acc;
+
+  }, {
+    deposits: 0,
+    withdraws: 0,
+    total: 0
+  })
+
   return (
     <Container>
       {/* 1° Caixa */}
@@ -19,7 +34,12 @@ export function Summary() {
           <p>Entradas</p>
           <img src={entradaImg} alt="Entradas" />
         </header>
-        <strong>R$1.000,00</strong>
+        <strong>
+        {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(summary.deposits)}
+          </strong>
       </div>
 
       {/* 2° Caixa */}
@@ -28,7 +48,12 @@ export function Summary() {
           <p>Saídas</p>
           <img src={saidaImg} alt="Saídas" />
         </header>
-        <strong>(R$400,00)</strong>
+        <strong>(
+        {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(summary.withdraws)}
+        )</strong>
       </div>
 
       {/* 3° Caixa */}
@@ -37,7 +62,12 @@ export function Summary() {
           <p>Total</p>
           <img src={totalImg} alt="Total" />
         </header>
-        <strong>R$600,00</strong>
+        <strong>
+        {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(summary.total)}
+          </strong>
       </div>
     </Container>
   )

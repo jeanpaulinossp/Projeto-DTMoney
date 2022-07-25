@@ -5,7 +5,7 @@ import closeImg from '../../assets/fechar.svg';
 import incomeImg from '../../assets/entradas.svg';
 import outcomeImg from '../../assets/saidas.svg';
 import { FormEvent, useState } from 'react';
-import { api } from '../../services/api';
+import { useTransactions } from '../../hooks/useTransactions';
 
 // O modal deve ser definido como root para fim de acessibilidade
 Modal.setAppElement('#root');
@@ -16,26 +16,34 @@ interface NewTransactionModalProps {
 }
 
 export function NewTransactionModal({isOpen, onRequestClose}: NewTransactionModalProps){
+  
+  const { createTransaction } = useTransactions();
+  
   // é criado um estado para cada informação que será guardada do formulário
   // esse estado deve ser importado no seu devido input
   const [title, setTitle] = useState('');
-  const [value, setValue] = useState(0);
+  const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState('');
   const [type, setType] = useState ('deposit');
 
   // essa função é passada dentro do container (toda vez que der submit, vai executar a função)
   // o event desabilita a função automatica de recarregar a página quando se da algum input
-  function handleCreateNewTransaction(event: FormEvent) {
+  async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
 
-    const data ={
+    await createTransaction({
       title,
-      value,
+      amount,
       category,
-      type
-    };
+      type,
+    })
 
-    api.post('/transactions', data)
+    //essa função reseta os campos do Modal e fecha ele
+    setTitle('');
+    setAmount(0);
+    setCategory('');
+    setType('deposit');
+    onRequestClose();
 
   }
 
@@ -76,8 +84,8 @@ export function NewTransactionModal({isOpen, onRequestClose}: NewTransactionModa
         <input 
         type="number" 
         placeholder="Valor" 
-        value={value}
-        onChange={event => setValue(Number(event.target.value))}
+        value={amount}
+        onChange={event => setAmount(Number(event.target.value))}
         />
 
         <TransactionTypeContainer>
